@@ -276,7 +276,6 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
   override fun streamInsert(buffer: ArrayBuffer) {
     outputStream?.let {
       val bytes = buffer.toByteArray()
-      log("streamInsert() - ${bytes.size} bytes")
       it.write(bytes)
       it.flush()
     }
