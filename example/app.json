@@ -12,7 +12,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.yzlin.nitrospeechrecognitionexample",
       "infoPlist": {
-        "UIBackgroundModes": ["audio"]
+        "UIBackgroundModes": [
+          "audio"
+        ]
       }
     },
     "android": {
@@ -54,9 +56,13 @@
             "android.permission.FOREGROUND_SERVICE_MICROPHONE"
           ],
           "androidForegroundService": true,
-          "androidFSTypes": ["mediaPlayback", "microphone"]
+          "androidFSTypes": [
+            "mediaPlayback",
+            "microphone"
+          ]
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
