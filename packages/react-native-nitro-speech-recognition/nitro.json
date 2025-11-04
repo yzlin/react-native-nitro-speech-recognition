@@ -1,0 +1,18 @@
+{
+  "$schema": "https://nitro.margelo.com/nitro.schema.json",
+  "cxxNamespace": ["nitrospeechrecognition"],
+  "ios": {
+    "iosModuleName": "NitroSpeechRecognition"
+  },
+  "android": {
+    "androidNamespace": ["nitrospeechrecognition"],
+    "androidCxxLibName": "NitroSpeechRecognition"
+  },
+  "autolinking": {
+    "NitroSpeechRecognition": {
+      "swift": "HybridNitroSpeechRecognition",
+      "kotlin": "HybridNitroSpeechRecognition"
+    }
+  },
+  "ignorePaths": ["**/node_modules"]
+}

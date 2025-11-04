@@ -1,0 +1,115 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "**",
+      "!example/**/ios/",
+      "!example/**/android/",
+      "!packages/**/lib/",
+      "!packages/**/ios/",
+      "!packages/**/android/",
+      "!packages/**/nitrogen/generated/",
+    ],
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "useSortedAttributes": "off",
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              [":NODE:", ":BUN:"],
+              ":BLANK_LINE:",
+              [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"],
+              ":BLANK_LINE:",
+              ":ALIAS:",
+              ":BLANK_LINE:",
+              ":PATH:",
+              ":BLANK_LINE:",
+              "**",
+            ],
+          },
+        },
+      },
+    },
+  },
+  "linter": {
+    "includes": ["**", "!**/node_modules"],
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "useKeyWithClickEvents": "off",
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "noParameterAssign": "error",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error",
+        "noUselessElse": "error",
+        "noMagicNumbers": "off",
+        "useDefaultSwitchClause": "off",
+        "useNamingConvention": {
+          "options": {
+            "strictCase": true,
+          },
+        },
+      },
+      "correctness": {
+        "noUnusedImports": "error",
+        "useExhaustiveDependencies": "off",
+      },
+      "nursery": {
+        "useConsistentTypeDefinitions": {
+          "level": "error",
+          "options": {
+            "style": "interface",
+          },
+        },
+        "noShadow": "info",
+      },
+      "suspicious": {
+        "noConsole": "off",
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "off",
+      },
+      "performance": {
+        "noNamespaceImport": "info",
+        "noBarrelFile": "off",
+      },
+    },
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+  },
+  "extends": ["ultracite"],
+  "overrides": [
+    {
+      "includes": ["**/*.nitro.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": "off",
+          },
+        },
+      },
+    },
+  ],
+}
