@@ -15,7 +15,7 @@
     },
     "example": {
       "name": "nitro-speech-recognition-example",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "dependencies": {
         "@expo/vector-icons": "^15.0.2",
         "@legendapp/state": "^3.0.0-beta.41",
@@ -45,7 +45,7 @@
         "react-native-reanimated": "~4.1.1",
         "react-native-safe-area-context": "~5.6.0",
         "react-native-screens": "~4.16.0",
-        "react-native-worklets": "^0.6.1",
+        "react-native-worklets": "~0.6.1",
       },
       "devDependencies": {
         "@types/react": "~19.1.0",
@@ -56,7 +56,7 @@
     },
     "packages/react-native-nitro-speech-recognition": {
       "name": "react-native-nitro-speech-recognition",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "dependencies": {
         "eventemitter3": "^5.0.1",
       },

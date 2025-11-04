@@ -1,7 +1,7 @@
 {
   "name": "react-native-nitro-speech-recognition-monorepo",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "repository": "https://github.com/yzlin/react-native-nitro-speech-recognition.git",
   "author": "Ethan Lin <yzlin1985@gmail.com> (https://github.com/yzlin)",
   "workspaces": [
