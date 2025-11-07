@@ -13,6 +13,10 @@ namespace margelo::nitro::nitrospeechrecognition { struct OnDeviceModelDownloadR
 namespace margelo::nitro::nitrospeechrecognition { enum class OnDeviceModelDownloadStatus; }
 // Forward declaration of `SupportedLocales` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { struct SupportedLocales; }
+// Forward declaration of `PermissionResponse` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { struct PermissionResponse; }
+// Forward declaration of `PermissionStatus` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { enum class PermissionStatus; }
 // Forward declaration of `SpeechRecognitionOptions` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { struct SpeechRecognitionOptions; }
 // Forward declaration of `Handlers` to properly resolve imports.
@@ -36,6 +40,10 @@ namespace margelo::nitro::nitrospeechrecognition { enum class EventType; }
 #include "SupportedLocales.hpp"
 #include "JSupportedLocales.hpp"
 #include <vector>
+#include "PermissionResponse.hpp"
+#include "JPermissionResponse.hpp"
+#include "PermissionStatus.hpp"
+#include "JPermissionStatus.hpp"
 #include "SpeechRecognitionOptions.hpp"
 #include "JSpeechRecognitionOptions.hpp"
 #include <optional>
@@ -135,6 +143,38 @@ namespace margelo::nitro::nitrospeechrecognition {
       auto __promise = Promise<SupportedLocales>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
         auto __result = jni::static_ref_cast<JSupportedLocales>(__boxedResult);
+        __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<PermissionResponse>> JHybridNitroSpeechRecognitionSpec::getPermissionsAsync() {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("getPermissionsAsync");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<PermissionResponse>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JPermissionResponse>(__boxedResult);
+        __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<PermissionResponse>> JHybridNitroSpeechRecognitionSpec::requestPermissionsAsync() {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("requestPermissionsAsync");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<PermissionResponse>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JPermissionResponse>(__boxedResult);
         __promise->resolve(__result->toCpp());
       });
       __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {

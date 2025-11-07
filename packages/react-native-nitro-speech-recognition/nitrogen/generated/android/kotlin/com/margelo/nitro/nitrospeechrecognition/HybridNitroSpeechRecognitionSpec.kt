@@ -79,6 +79,14 @@ abstract class HybridNitroSpeechRecognitionSpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun getSupportedLocales(): Promise<SupportedLocales>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun getPermissionsAsync(): Promise<PermissionResponse>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun requestPermissionsAsync(): Promise<PermissionResponse>
 
   private external fun initHybrid(): HybridData
 

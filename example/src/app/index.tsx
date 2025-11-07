@@ -105,6 +105,15 @@ async function checkPermission() {
   if (recordingStatus !== "Granted") {
     throw new Error("Recording permission not granted");
   }
+
+  let speechStatus = await SpeechRecognition.getPermissionsAsync();
+  if (speechStatus.canAskAgain) {
+    speechStatus = await SpeechRecognition.requestPermissionsAsync();
+  }
+
+  if (!speechStatus.granted) {
+    throw new Error("Speech recognition permission not granted");
+  }
 }
 
 let recorder: AudioRecorder | null = null;

@@ -18,6 +18,10 @@ namespace margelo::nitro::nitrospeechrecognition { class HybridNitroSpeechRecogn
 namespace margelo::nitro::nitrospeechrecognition { struct OnDeviceModelDownloadResult; }
 // Forward declaration of `OnDeviceModelDownloadStatus` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { enum class OnDeviceModelDownloadStatus; }
+// Forward declaration of `PermissionResponse` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { struct PermissionResponse; }
+// Forward declaration of `PermissionStatus` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { enum class PermissionStatus; }
 // Forward declaration of `SpeechRecognitionErrorEvent` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { struct SpeechRecognitionErrorEvent; }
 // Forward declaration of `SpeechRecognitionOptions` to properly resolve imports.
@@ -35,6 +39,8 @@ namespace margelo::nitro::nitrospeechrecognition { struct SupportedLocales; }
 #include "HybridNitroSpeechRecognitionSpec.hpp"
 #include "OnDeviceModelDownloadResult.hpp"
 #include "OnDeviceModelDownloadStatus.hpp"
+#include "PermissionResponse.hpp"
+#include "PermissionStatus.hpp"
 #include "SpeechRecognitionErrorEvent.hpp"
 #include "SpeechRecognitionOptions.hpp"
 #include "SpeechRecognitionResult.hpp"

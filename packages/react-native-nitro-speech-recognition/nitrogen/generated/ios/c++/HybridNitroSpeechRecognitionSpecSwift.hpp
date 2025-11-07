@@ -32,6 +32,10 @@ namespace margelo::nitro::nitrospeechrecognition { struct OnDeviceModelDownloadR
 namespace margelo::nitro::nitrospeechrecognition { enum class OnDeviceModelDownloadStatus; }
 // Forward declaration of `SupportedLocales` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { struct SupportedLocales; }
+// Forward declaration of `PermissionResponse` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { struct PermissionResponse; }
+// Forward declaration of `PermissionStatus` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { enum class PermissionStatus; }
 
 #include "SpeechRecognitionOptions.hpp"
 #include <string>
@@ -49,6 +53,8 @@ namespace margelo::nitro::nitrospeechrecognition { struct SupportedLocales; }
 #include <NitroModules/Promise.hpp>
 #include "OnDeviceModelDownloadStatus.hpp"
 #include "SupportedLocales.hpp"
+#include "PermissionResponse.hpp"
+#include "PermissionStatus.hpp"
 
 #include "NitroSpeechRecognition-Swift-Cxx-Umbrella.hpp"
 
@@ -138,6 +144,22 @@ namespace margelo::nitro::nitrospeechrecognition {
     }
     inline std::shared_ptr<Promise<SupportedLocales>> getSupportedLocales() override {
       auto __result = _swiftPart.getSupportedLocales();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<PermissionResponse>> getPermissionsAsync() override {
+      auto __result = _swiftPart.getPermissionsAsync();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<PermissionResponse>> requestPermissionsAsync() override {
+      auto __result = _swiftPart.requestPermissionsAsync();
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

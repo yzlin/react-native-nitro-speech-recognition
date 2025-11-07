@@ -21,6 +21,8 @@ namespace margelo::nitro::nitrospeechrecognition {
       prototype.registerHybridMethod("isOnDeviceRecognitionAvailable", &HybridNitroSpeechRecognitionSpec::isOnDeviceRecognitionAvailable);
       prototype.registerHybridMethod("downloadOnDeviceModel", &HybridNitroSpeechRecognitionSpec::downloadOnDeviceModel);
       prototype.registerHybridMethod("getSupportedLocales", &HybridNitroSpeechRecognitionSpec::getSupportedLocales);
+      prototype.registerHybridMethod("getPermissionsAsync", &HybridNitroSpeechRecognitionSpec::getPermissionsAsync);
+      prototype.registerHybridMethod("requestPermissionsAsync", &HybridNitroSpeechRecognitionSpec::requestPermissionsAsync);
     });
   }
 

@@ -15,6 +15,9 @@ export interface NitroSpeechRecognition
   ): Promise<OnDeviceModelDownloadResult>;
 
   getSupportedLocales(): Promise<SupportedLocales>;
+
+  getPermissionsAsync(): Promise<PermissionResponse>;
+  requestPermissionsAsync(): Promise<PermissionResponse>;
 }
 
 export interface SpeechRecognitionOptions {
@@ -68,3 +71,11 @@ export interface SupportedLocales {
   locales: string[];
   installedLocales: string[];
 }
+
+export interface PermissionResponse {
+  canAskAgain: boolean;
+  granted: boolean;
+  status: PermissionStatus;
+}
+
+export type PermissionStatus = "undetermined" | "denied" | "granted";

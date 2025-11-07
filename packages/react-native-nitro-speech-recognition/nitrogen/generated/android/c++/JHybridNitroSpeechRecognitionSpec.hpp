@@ -61,6 +61,8 @@ namespace margelo::nitro::nitrospeechrecognition {
     bool isOnDeviceRecognitionAvailable() override;
     std::shared_ptr<Promise<OnDeviceModelDownloadResult>> downloadOnDeviceModel(const std::string& locale, const std::function<void(double /* progress */)>& onDownloadProgress) override;
     std::shared_ptr<Promise<SupportedLocales>> getSupportedLocales() override;
+    std::shared_ptr<Promise<PermissionResponse>> getPermissionsAsync() override;
+    std::shared_ptr<Promise<PermissionResponse>> requestPermissionsAsync() override;
 
   private:
     friend HybridBase;

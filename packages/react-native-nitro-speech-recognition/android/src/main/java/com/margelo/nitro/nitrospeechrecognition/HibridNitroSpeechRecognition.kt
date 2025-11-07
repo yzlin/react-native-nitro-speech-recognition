@@ -427,6 +427,14 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
     return promise
   }
 
+  override fun getPermissionsAsync(): Promise<PermissionResponse> {
+    return Promise.resolved(PermissionResponse(false, true, PermissionStatus.GRANTED))
+  }
+
+  override fun requestPermissionsAsync(): Promise<PermissionResponse> {
+    return Promise.resolved(PermissionResponse(false, true, PermissionStatus.GRANTED))
+  }
+
   override fun dispose() {
     super.dispose()
 

@@ -16,6 +16,10 @@ namespace margelo::nitro::nitrospeechrecognition { class HybridNitroSpeechRecogn
 namespace margelo::nitro::nitrospeechrecognition { struct OnDeviceModelDownloadResult; }
 // Forward declaration of `OnDeviceModelDownloadStatus` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { enum class OnDeviceModelDownloadStatus; }
+// Forward declaration of `PermissionResponse` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { struct PermissionResponse; }
+// Forward declaration of `PermissionStatus` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { enum class PermissionStatus; }
 // Forward declaration of `SpeechRecognitionErrorEvent` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { struct SpeechRecognitionErrorEvent; }
 // Forward declaration of `SpeechRecognitionResultEvent` to properly resolve imports.
@@ -34,6 +38,8 @@ namespace NitroSpeechRecognition { class HybridNitroSpeechRecognitionSpec_cxx; }
 #include "HybridNitroSpeechRecognitionSpec.hpp"
 #include "OnDeviceModelDownloadResult.hpp"
 #include "OnDeviceModelDownloadStatus.hpp"
+#include "PermissionResponse.hpp"
+#include "PermissionStatus.hpp"
 #include "SpeechRecognitionErrorEvent.hpp"
 #include "SpeechRecognitionResult.hpp"
 #include "SpeechRecognitionResultEvent.hpp"
@@ -284,6 +290,40 @@ namespace margelo::nitro::nitrospeechrecognition::bridge::swift {
     return Func_void_SupportedLocales_Wrapper(std::move(value));
   }
   
+  // pragma MARK: std::shared_ptr<Promise<PermissionResponse>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<PermissionResponse>>`.
+   */
+  using std__shared_ptr_Promise_PermissionResponse__ = std::shared_ptr<Promise<PermissionResponse>>;
+  inline std::shared_ptr<Promise<PermissionResponse>> create_std__shared_ptr_Promise_PermissionResponse__() noexcept {
+    return Promise<PermissionResponse>::create();
+  }
+  inline PromiseHolder<PermissionResponse> wrap_std__shared_ptr_Promise_PermissionResponse__(std::shared_ptr<Promise<PermissionResponse>> promise) noexcept {
+    return PromiseHolder<PermissionResponse>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const PermissionResponse& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const PermissionResponse&)>`.
+   */
+  using Func_void_PermissionResponse = std::function<void(const PermissionResponse& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const PermissionResponse& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_PermissionResponse_Wrapper final {
+  public:
+    explicit Func_void_PermissionResponse_Wrapper(std::function<void(const PermissionResponse& /* result */)>&& func): _function(std::make_unique<std::function<void(const PermissionResponse& /* result */)>>(std::move(func))) {}
+    inline void call(PermissionResponse result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const PermissionResponse& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_PermissionResponse create_Func_void_PermissionResponse(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_PermissionResponse_Wrapper wrap_Func_void_PermissionResponse(Func_void_PermissionResponse value) noexcept {
+    return Func_void_PermissionResponse_Wrapper(std::move(value));
+  }
+  
   // pragma MARK: std::shared_ptr<HybridNitroSpeechRecognitionSpec>
   /**
    * Specialized version of `std::shared_ptr<HybridNitroSpeechRecognitionSpec>`.
@@ -330,6 +370,15 @@ namespace margelo::nitro::nitrospeechrecognition::bridge::swift {
   }
   inline Result_std__shared_ptr_Promise_SupportedLocales___ create_Result_std__shared_ptr_Promise_SupportedLocales___(const std::exception_ptr& error) noexcept {
     return Result<std::shared_ptr<Promise<SupportedLocales>>>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<PermissionResponse>>>
+  using Result_std__shared_ptr_Promise_PermissionResponse___ = Result<std::shared_ptr<Promise<PermissionResponse>>>;
+  inline Result_std__shared_ptr_Promise_PermissionResponse___ create_Result_std__shared_ptr_Promise_PermissionResponse___(const std::shared_ptr<Promise<PermissionResponse>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<PermissionResponse>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_PermissionResponse___ create_Result_std__shared_ptr_Promise_PermissionResponse___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<PermissionResponse>>>::withError(error);
   }
 
 } // namespace margelo::nitro::nitrospeechrecognition::bridge::swift

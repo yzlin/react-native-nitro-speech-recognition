@@ -21,6 +21,8 @@ namespace margelo::nitro::nitrospeechrecognition { struct Handlers; }
 namespace margelo::nitro::nitrospeechrecognition { struct OnDeviceModelDownloadResult; }
 // Forward declaration of `SupportedLocales` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { struct SupportedLocales; }
+// Forward declaration of `PermissionResponse` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { struct PermissionResponse; }
 
 #include "SpeechRecognitionOptions.hpp"
 #include "Handlers.hpp"
@@ -30,6 +32,7 @@ namespace margelo::nitro::nitrospeechrecognition { struct SupportedLocales; }
 #include <string>
 #include <functional>
 #include "SupportedLocales.hpp"
+#include "PermissionResponse.hpp"
 
 namespace margelo::nitro::nitrospeechrecognition {
 
@@ -69,6 +72,8 @@ namespace margelo::nitro::nitrospeechrecognition {
       virtual bool isOnDeviceRecognitionAvailable() = 0;
       virtual std::shared_ptr<Promise<OnDeviceModelDownloadResult>> downloadOnDeviceModel(const std::string& locale, const std::function<void(double /* progress */)>& onDownloadProgress) = 0;
       virtual std::shared_ptr<Promise<SupportedLocales>> getSupportedLocales() = 0;
+      virtual std::shared_ptr<Promise<PermissionResponse>> getPermissionsAsync() = 0;
+      virtual std::shared_ptr<Promise<PermissionResponse>> requestPermissionsAsync() = 0;
 
     protected:
       // Hybrid Setup

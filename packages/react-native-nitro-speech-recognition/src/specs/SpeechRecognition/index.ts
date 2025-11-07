@@ -4,6 +4,7 @@ import { NitroModules } from "react-native-nitro-modules";
 import type {
   NitroSpeechRecognition as NitroSpeechRecognitionModule,
   OnDeviceModelDownloadResult,
+  PermissionResponse,
   SpeechRecognitionErrorEvent,
   SpeechRecognitionOptions,
   SpeechRecognitionResultEvent,
@@ -101,6 +102,14 @@ export class SpeechRecognition {
       locale,
       onDownloadProgress
     );
+  }
+
+  static getPermissionsAsync(): Promise<PermissionResponse> {
+    return HybridNitroSpeechRecognition.getPermissionsAsync();
+  }
+
+  static requestPermissionsAsync(): Promise<PermissionResponse> {
+    return HybridNitroSpeechRecognition.requestPermissionsAsync();
   }
 
   on<EventType extends keyof Events>(

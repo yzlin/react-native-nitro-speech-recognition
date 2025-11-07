@@ -22,6 +22,8 @@ public protocol HybridNitroSpeechRecognitionSpec_protocol: HybridObject {
   func isOnDeviceRecognitionAvailable() throws -> Bool
   func downloadOnDeviceModel(locale: String, onDownloadProgress: @escaping (_ progress: Double) -> Void) throws -> Promise<OnDeviceModelDownloadResult>
   func getSupportedLocales() throws -> Promise<SupportedLocales>
+  func getPermissionsAsync() throws -> Promise<PermissionResponse>
+  func requestPermissionsAsync() throws -> Promise<PermissionResponse>
 }
 
 public extension HybridNitroSpeechRecognitionSpec_protocol {

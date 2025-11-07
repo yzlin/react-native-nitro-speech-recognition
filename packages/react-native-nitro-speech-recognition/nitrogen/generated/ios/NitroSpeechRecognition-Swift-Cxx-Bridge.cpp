@@ -69,6 +69,14 @@ namespace margelo::nitro::nitrospeechrecognition::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void(const PermissionResponse& /* result */)>
+  Func_void_PermissionResponse create_Func_void_PermissionResponse(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = NitroSpeechRecognition::Func_void_PermissionResponse::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const PermissionResponse& result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
   // pragma MARK: std::shared_ptr<HybridNitroSpeechRecognitionSpec>
   std::shared_ptr<HybridNitroSpeechRecognitionSpec> create_std__shared_ptr_HybridNitroSpeechRecognitionSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
     NitroSpeechRecognition::HybridNitroSpeechRecognitionSpec_cxx swiftPart = NitroSpeechRecognition::HybridNitroSpeechRecognitionSpec_cxx::fromUnsafe(swiftUnsafePointer);
