@@ -19,9 +19,16 @@ import com.facebook.proguard.annotations.DoNotStrip
 import com.margelo.nitro.NitroModules
 import com.margelo.nitro.core.ArrayBuffer
 import com.margelo.nitro.core.Promise
+import com.margelo.nitro.nitrospeechrecognition.AudioFormat as AudioBufferFormat
 import java.io.IOException
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import java.util.Locale
 import java.util.concurrent.Executors
+
+typealias ResultCallback = (SpeechRecognitionResultEvent) -> Unit
+typealias ErrorCallback = (SpeechRecognitionErrorEvent) -> Unit
+typealias EventCallback = (EventType) -> Unit
 
 enum class RecognitionState {
   INACTIVE, // Represents the inactive state
@@ -39,7 +46,10 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
   private val mainHandler = Handler(Looper.getMainLooper())
   private var recordingParcel: ParcelFileDescriptor? = null
   private var outputStream: ParcelFileDescriptor.AutoCloseOutputStream? = null
-  private var handlers: Handlers? = null
+  private var options: SpeechRecognitionOptions? = null
+  private var onResult: ResultCallback? = null
+  private var onError: ErrorCallback? = null
+  private var onEvent: EventCallback? = null
 
   var recognitionState = RecognitionState.INACTIVE
 
@@ -72,8 +82,7 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
       options: SpeechRecognitionOptions,
       parcel: ParcelFileDescriptor
     ): Intent {
-      val sampleRateInHz = 16000
-      val audioFormat = AudioFormat.ENCODING_PCM_16BIT
+      val sampleRateInHz = options.sampleRate
 
       val action = RecognizerIntent.ACTION_RECOGNIZE_SPEECH
       val intent = Intent(action)
@@ -97,7 +106,9 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
 
       intent.putExtra(RecognizerIntent.EXTRA_AUDIO_SOURCE, parcel)
       intent.putExtra(RecognizerIntent.EXTRA_AUDIO_SOURCE_CHANNEL_COUNT, 1)
-      intent.putExtra(RecognizerIntent.EXTRA_AUDIO_SOURCE_ENCODING, audioFormat)
+      // NOTE: SpeechRecognizer doesn't seem to be happy with AudioFormat.ENCODING_PCM_FLOAT, so here forces using PCM 16bit
+      // and later convert the incoming stream
+      intent.putExtra(RecognizerIntent.EXTRA_AUDIO_SOURCE_ENCODING, AudioFormat.ENCODING_PCM_16BIT)
       intent.putExtra(RecognizerIntent.EXTRA_AUDIO_SOURCE_SAMPLING_RATE, sampleRateInHz)
       intent.putExtra(
         RecognizerIntent.EXTRA_SEGMENTED_SESSION,
@@ -155,7 +166,7 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
         // do nothing
       }
       speech?.destroy()
-      handlers?.onEvent(EventType.END)
+      onEvent?.invoke(EventType.END)
       recognitionState = state
     }
   }
@@ -224,9 +235,14 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
 
   override fun start(
     options: SpeechRecognitionOptions,
-    handlers: Handlers
+    onResult: ResultCallback,
+    onError: ErrorCallback,
+    onEvent: EventCallback
   ) {
-    this.handlers = handlers
+    this.options = options
+    this.onResult = onResult
+    this.onError = onError
+    this.onEvent = onEvent
 
     mainHandler.post {
       speech?.destroy()
@@ -244,12 +260,12 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
         speech?.setRecognitionListener(this)
         speech?.startListening(intent)
 
-        handlers.onEvent(EventType.START)
+        onEvent(EventType.START)
       } catch (e: Exception) {
         val errorMessage = e.localizedMessage ?: e.message ?: "Unknown error"
         e.printStackTrace()
         log("Failed to create Speech Recognizer with error: $errorMessage")
-        handlers.onError(
+        onError(
           SpeechRecognitionErrorEvent(
             "audio-capture",
             errorMessage,
@@ -274,11 +290,16 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
   }
 
   override fun streamInsert(buffer: ArrayBuffer) {
-    outputStream?.let {
-      val bytes = buffer.toByteArray()
-      it.write(bytes)
-      it.flush()
+    val options = this.options ?: return
+    val outputStream = this.outputStream ?: return
+
+    var bytes = buffer.toByteArray()
+    if (options.audioFormat == AudioBufferFormat.PCMFLOAT32) {
+      bytes = convertFloat32ToPCM16(bytes)
     }
+
+    outputStream.write(bytes)
+    outputStream.flush()
   }
 
   override fun isRecognitionAvailable(): Boolean {
@@ -439,19 +460,21 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
     super.dispose()
 
     // prevent from sending any events
-    handlers = null
+    this.onResult = null
+    this.onError = null
+    this.onEvent = null
     teardownAndEnd()
   }
 
   override fun onBeginningOfSpeech() {
-    handlers?.onEvent(EventType.SPEECHSTART)
+    onEvent?.invoke(EventType.SPEECHSTART)
   }
 
   override fun onBufferReceived(p0: ByteArray?) {
   }
 
   override fun onEndOfSpeech() {
-    handlers?.onEvent(EventType.SPEECHEND)
+    onEvent?.invoke(EventType.SPEECHEND)
     log("onEndOfSpeech()")
   }
 
@@ -459,11 +482,11 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
     // Web Speech API:
     // https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition/nomatch_event
     if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) {
-      handlers?.onEvent(EventType.NOMATCH)
+      onEvent?.invoke(EventType.NOMATCH)
     }
 
     val error = getErrorInfo(errorCode)
-    handlers?.onError(error)
+    onError?.invoke(error)
     teardownAndEnd(RecognitionState.ERROR)
     log("onError() - ${error.name}: ${error.message} - code: $errorCode")
   }
@@ -479,7 +502,7 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
 
     log("onPartialResults(), results: $resultsList")
     if (resultsList.isNotEmpty()) {
-      handlers?.onResult(SpeechRecognitionResultEvent(false, resultsList.toTypedArray()))
+      onResult?.invoke(SpeechRecognitionResultEvent(false, resultsList.toTypedArray()))
     }
   }
 
@@ -487,7 +510,7 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
     // Avoid sending this event if there was an error
     // An error may preempt this event in the case of a permission error or a language not supported error
     if (recognitionState != RecognitionState.ERROR) {
-      handlers?.onEvent(EventType.START)
+      onEvent?.invoke(EventType.START)
       recognitionState = RecognitionState.ACTIVE
     }
   }
@@ -499,9 +522,9 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
       // https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition/nomatch_event
       // The nomatch event of the Web Speech API is fired
       // when the speech recognition service returns a final result with no significant recognition.
-      handlers?.onEvent(EventType.NOMATCH)
+      onEvent?.invoke(EventType.NOMATCH)
     } else {
-      handlers?.onResult(SpeechRecognitionResultEvent(true, resultsList.toTypedArray()))
+      onResult?.invoke(SpeechRecognitionResultEvent(true, resultsList.toTypedArray()))
     }
     log("onResults(), results: $resultsList")
 
@@ -514,9 +537,9 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
   override fun onSegmentResults(segmentResults: Bundle) {
     val resultsList = getResults(segmentResults)
     if (resultsList.isEmpty()) {
-      handlers?.onEvent(EventType.NOMATCH)
+      onEvent?.invoke(EventType.NOMATCH)
     } else {
-      handlers?.onResult(SpeechRecognitionResultEvent(true, resultsList.toTypedArray()))
+      onResult?.invoke(SpeechRecognitionResultEvent(true, resultsList.toTypedArray()))
     }
     log("onSegmentResults(), transcriptions: $resultsList")
 
@@ -534,4 +557,27 @@ class HybridNitroSpeechRecognition : HybridNitroSpeechRecognitionSpec(), Recogni
   override fun onRmsChanged(p0: Float) {
     // for future implementation on volume change
   }
+}
+
+fun convertFloat32ToPCM16(float32Data: ByteArray): ByteArray {
+  val floatBuffer = ByteBuffer.wrap(float32Data)
+    .order(ByteOrder.LITTLE_ENDIAN)
+    .asFloatBuffer()
+
+  val output = ByteArray(float32Data.size / 2)  // Int16 is half the size
+  val outputBuffer = ByteBuffer.wrap(output)
+    .order(ByteOrder.LITTLE_ENDIAN)
+
+  while (floatBuffer.hasRemaining()) {
+    val sample = floatBuffer.get()
+    val clamped = sample.coerceIn(-1.0f, 1.0f)
+    val int16Sample = if (clamped < 0) {
+      (clamped * 0x8000).toInt().toShort()
+    } else {
+      (clamped * 0x7FFF).toInt().toShort()
+    }
+    outputBuffer.putShort(int16Sample)
+  }
+
+  return output
 }

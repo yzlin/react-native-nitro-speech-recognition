@@ -23,10 +23,12 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-
+// Forward declaration of `AudioFormat` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { enum class AudioFormat; }
 
 #include <string>
 #include <optional>
+#include "AudioFormat.hpp"
 
 namespace margelo::nitro::nitrospeechrecognition {
 
@@ -40,10 +42,12 @@ namespace margelo::nitro::nitrospeechrecognition {
     double maxAlternatives     SWIFT_PRIVATE;
     std::optional<bool> requiresOnDeviceRecognition     SWIFT_PRIVATE;
     bool addsPunctuation     SWIFT_PRIVATE;
+    AudioFormat audioFormat     SWIFT_PRIVATE;
+    double sampleRate     SWIFT_PRIVATE;
 
   public:
     SpeechRecognitionOptions() = default;
-    explicit SpeechRecognitionOptions(std::string locale, bool interimResults, double maxAlternatives, std::optional<bool> requiresOnDeviceRecognition, bool addsPunctuation): locale(locale), interimResults(interimResults), maxAlternatives(maxAlternatives), requiresOnDeviceRecognition(requiresOnDeviceRecognition), addsPunctuation(addsPunctuation) {}
+    explicit SpeechRecognitionOptions(std::string locale, bool interimResults, double maxAlternatives, std::optional<bool> requiresOnDeviceRecognition, bool addsPunctuation, AudioFormat audioFormat, double sampleRate): locale(locale), interimResults(interimResults), maxAlternatives(maxAlternatives), requiresOnDeviceRecognition(requiresOnDeviceRecognition), addsPunctuation(addsPunctuation), audioFormat(audioFormat), sampleRate(sampleRate) {}
   };
 
 } // namespace margelo::nitro::nitrospeechrecognition
@@ -60,7 +64,9 @@ namespace margelo::nitro {
         JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, "interimResults")),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "maxAlternatives")),
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, "requiresOnDeviceRecognition")),
-        JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, "addsPunctuation"))
+        JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, "addsPunctuation")),
+        JSIConverter<margelo::nitro::nitrospeechrecognition::AudioFormat>::fromJSI(runtime, obj.getProperty(runtime, "audioFormat")),
+        JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, "sampleRate"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::nitrospeechrecognition::SpeechRecognitionOptions& arg) {
@@ -70,6 +76,8 @@ namespace margelo::nitro {
       obj.setProperty(runtime, "maxAlternatives", JSIConverter<double>::toJSI(runtime, arg.maxAlternatives));
       obj.setProperty(runtime, "requiresOnDeviceRecognition", JSIConverter<std::optional<bool>>::toJSI(runtime, arg.requiresOnDeviceRecognition));
       obj.setProperty(runtime, "addsPunctuation", JSIConverter<bool>::toJSI(runtime, arg.addsPunctuation));
+      obj.setProperty(runtime, "audioFormat", JSIConverter<margelo::nitro::nitrospeechrecognition::AudioFormat>::toJSI(runtime, arg.audioFormat));
+      obj.setProperty(runtime, "sampleRate", JSIConverter<double>::toJSI(runtime, arg.sampleRate));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -85,6 +93,8 @@ namespace margelo::nitro {
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "maxAlternatives"))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, "requiresOnDeviceRecognition"))) return false;
       if (!JSIConverter<bool>::canConvert(runtime, obj.getProperty(runtime, "addsPunctuation"))) return false;
+      if (!JSIConverter<margelo::nitro::nitrospeechrecognition::AudioFormat>::canConvert(runtime, obj.getProperty(runtime, "audioFormat"))) return false;
+      if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, "sampleRate"))) return false;
       return true;
     }
   };

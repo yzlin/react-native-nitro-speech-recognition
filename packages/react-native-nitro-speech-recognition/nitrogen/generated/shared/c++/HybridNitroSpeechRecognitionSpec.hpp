@@ -15,8 +15,12 @@
 
 // Forward declaration of `SpeechRecognitionOptions` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { struct SpeechRecognitionOptions; }
-// Forward declaration of `Handlers` to properly resolve imports.
-namespace margelo::nitro::nitrospeechrecognition { struct Handlers; }
+// Forward declaration of `SpeechRecognitionResultEvent` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { struct SpeechRecognitionResultEvent; }
+// Forward declaration of `SpeechRecognitionErrorEvent` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { struct SpeechRecognitionErrorEvent; }
+// Forward declaration of `EventType` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { enum class EventType; }
 // Forward declaration of `OnDeviceModelDownloadResult` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { struct OnDeviceModelDownloadResult; }
 // Forward declaration of `SupportedLocales` to properly resolve imports.
@@ -25,12 +29,14 @@ namespace margelo::nitro::nitrospeechrecognition { struct SupportedLocales; }
 namespace margelo::nitro::nitrospeechrecognition { struct PermissionResponse; }
 
 #include "SpeechRecognitionOptions.hpp"
-#include "Handlers.hpp"
+#include "SpeechRecognitionResultEvent.hpp"
+#include <functional>
+#include "SpeechRecognitionErrorEvent.hpp"
+#include "EventType.hpp"
 #include <NitroModules/ArrayBuffer.hpp>
 #include "OnDeviceModelDownloadResult.hpp"
 #include <NitroModules/Promise.hpp>
 #include <string>
-#include <functional>
 #include "SupportedLocales.hpp"
 #include "PermissionResponse.hpp"
 
@@ -65,7 +71,7 @@ namespace margelo::nitro::nitrospeechrecognition {
 
     public:
       // Methods
-      virtual void start(const SpeechRecognitionOptions& options, const Handlers& handlers) = 0;
+      virtual void start(const SpeechRecognitionOptions& options, const std::function<void(const SpeechRecognitionResultEvent& /* result */)>& onResult, const std::function<void(const SpeechRecognitionErrorEvent& /* error */)>& onError, const std::function<void(EventType /* eventType */)>& onEvent) = 0;
       virtual void stop() = 0;
       virtual void streamInsert(const std::shared_ptr<ArrayBuffer>& buffer) = 0;
       virtual bool isRecognitionAvailable() = 0;

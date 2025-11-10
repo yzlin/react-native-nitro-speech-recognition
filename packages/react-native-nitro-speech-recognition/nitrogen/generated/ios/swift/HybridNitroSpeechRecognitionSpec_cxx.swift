@@ -119,9 +119,24 @@ open class HybridNitroSpeechRecognitionSpec_cxx {
 
   // Methods
   @inline(__always)
-  public final func start(options: SpeechRecognitionOptions, handlers: Handlers) -> bridge.Result_void_ {
+  public final func start(options: SpeechRecognitionOptions, onResult: bridge.Func_void_SpeechRecognitionResultEvent, onError: bridge.Func_void_SpeechRecognitionErrorEvent, onEvent: bridge.Func_void_EventType) -> bridge.Result_void_ {
     do {
-      try self.__implementation.start(options: options, handlers: handlers)
+      try self.__implementation.start(options: options, onResult: { () -> (SpeechRecognitionResultEvent) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_SpeechRecognitionResultEvent(onResult)
+        return { (__result: SpeechRecognitionResultEvent) -> Void in
+          __wrappedFunction.call(__result)
+        }
+      }(), onError: { () -> (SpeechRecognitionErrorEvent) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_SpeechRecognitionErrorEvent(onError)
+        return { (__error: SpeechRecognitionErrorEvent) -> Void in
+          __wrappedFunction.call(__error)
+        }
+      }(), onEvent: { () -> (EventType) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_EventType(onEvent)
+        return { (__eventType: EventType) -> Void in
+          __wrappedFunction.call(__eventType.rawValue)
+        }
+      }())
       return bridge.create_Result_void_()
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()

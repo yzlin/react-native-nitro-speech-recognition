@@ -9,7 +9,8 @@
       "@/assets/*": [
         "./assets/*"
       ]
-    }
+    },
+    "strictNullChecks": true
   },
   "include": [
     "**/*.ts",

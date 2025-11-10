@@ -10,6 +10,8 @@
 #include <fbjni/fbjni.h>
 #include "SpeechRecognitionOptions.hpp"
 
+#include "AudioFormat.hpp"
+#include "JAudioFormat.hpp"
 #include <optional>
 #include <string>
 
@@ -42,12 +44,18 @@ namespace margelo::nitro::nitrospeechrecognition {
       jni::local_ref<jni::JBoolean> requiresOnDeviceRecognition = this->getFieldValue(fieldRequiresOnDeviceRecognition);
       static const auto fieldAddsPunctuation = clazz->getField<jboolean>("addsPunctuation");
       jboolean addsPunctuation = this->getFieldValue(fieldAddsPunctuation);
+      static const auto fieldAudioFormat = clazz->getField<JAudioFormat>("audioFormat");
+      jni::local_ref<JAudioFormat> audioFormat = this->getFieldValue(fieldAudioFormat);
+      static const auto fieldSampleRate = clazz->getField<double>("sampleRate");
+      double sampleRate = this->getFieldValue(fieldSampleRate);
       return SpeechRecognitionOptions(
         locale->toStdString(),
         static_cast<bool>(interimResults),
         maxAlternatives,
         requiresOnDeviceRecognition != nullptr ? std::make_optional(static_cast<bool>(requiresOnDeviceRecognition->value())) : std::nullopt,
-        static_cast<bool>(addsPunctuation)
+        static_cast<bool>(addsPunctuation),
+        audioFormat->toCpp(),
+        sampleRate
       );
     }
 
@@ -57,7 +65,7 @@ namespace margelo::nitro::nitrospeechrecognition {
      */
     [[maybe_unused]]
     static jni::local_ref<JSpeechRecognitionOptions::javaobject> fromCpp(const SpeechRecognitionOptions& value) {
-      using JSignature = JSpeechRecognitionOptions(jni::alias_ref<jni::JString>, jboolean, double, jni::alias_ref<jni::JBoolean>, jboolean);
+      using JSignature = JSpeechRecognitionOptions(jni::alias_ref<jni::JString>, jboolean, double, jni::alias_ref<jni::JBoolean>, jboolean, jni::alias_ref<JAudioFormat>, double);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -66,7 +74,9 @@ namespace margelo::nitro::nitrospeechrecognition {
         value.interimResults,
         value.maxAlternatives,
         value.requiresOnDeviceRecognition.has_value() ? jni::JBoolean::valueOf(value.requiresOnDeviceRecognition.value()) : nullptr,
-        value.addsPunctuation
+        value.addsPunctuation,
+        JAudioFormat::fromCpp(value.audioFormat),
+        value.sampleRate
       );
     }
   };

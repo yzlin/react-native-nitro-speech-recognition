@@ -12,9 +12,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.yzlin.nitrospeechrecognitionexample",
       "infoPlist": {
-        "UIBackgroundModes": [
-          "audio"
-        ]
+        "UIBackgroundModes": ["audio"]
       }
     },
     "android": {
@@ -29,6 +27,20 @@
       "package": "com.yzlin.nitrospeechrecognitionexample"
     },
     "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "17.0"
+          },
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0",
+            "minSdkVersion": 24
+          }
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",
@@ -47,6 +59,7 @@
         "react-native-audio-api",
         {
           "iosBackgroundMode": true,
+          "iosMicrophonePermission": "This app uses the microphone to recognize speech.",
           "androidPermissions": [
             "android.permission.WAKE_LOCK",
             "android.permission.RECORD_AUDIO",
@@ -56,13 +69,11 @@
             "android.permission.FOREGROUND_SERVICE_MICROPHONE"
           ],
           "androidForegroundService": true,
-          "androidFSTypes": [
-            "mediaPlayback",
-            "microphone"
-          ]
+          "androidFSTypes": ["mediaPlayback", "microphone"]
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      "react-native-nitro-speech-recognition"
     ],
     "experiments": {
       "typedRoutes": true,

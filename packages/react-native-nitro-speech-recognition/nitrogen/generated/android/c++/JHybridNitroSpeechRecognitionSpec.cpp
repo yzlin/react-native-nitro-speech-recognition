@@ -19,8 +19,8 @@ namespace margelo::nitro::nitrospeechrecognition { struct PermissionResponse; }
 namespace margelo::nitro::nitrospeechrecognition { enum class PermissionStatus; }
 // Forward declaration of `SpeechRecognitionOptions` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { struct SpeechRecognitionOptions; }
-// Forward declaration of `Handlers` to properly resolve imports.
-namespace margelo::nitro::nitrospeechrecognition { struct Handlers; }
+// Forward declaration of `AudioFormat` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { enum class AudioFormat; }
 // Forward declaration of `SpeechRecognitionResultEvent` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { struct SpeechRecognitionResultEvent; }
 // Forward declaration of `SpeechRecognitionResult` to properly resolve imports.
@@ -47,8 +47,8 @@ namespace margelo::nitro::nitrospeechrecognition { enum class EventType; }
 #include "SpeechRecognitionOptions.hpp"
 #include "JSpeechRecognitionOptions.hpp"
 #include <optional>
-#include "Handlers.hpp"
-#include "JHandlers.hpp"
+#include "AudioFormat.hpp"
+#include "JAudioFormat.hpp"
 #include "SpeechRecognitionResultEvent.hpp"
 #include <functional>
 #include "JFunc_void_SpeechRecognitionResultEvent.hpp"
@@ -98,9 +98,9 @@ namespace margelo::nitro::nitrospeechrecognition {
   
 
   // Methods
-  void JHybridNitroSpeechRecognitionSpec::start(const SpeechRecognitionOptions& options, const Handlers& handlers) {
-    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JSpeechRecognitionOptions> /* options */, jni::alias_ref<JHandlers> /* handlers */)>("start");
-    method(_javaPart, JSpeechRecognitionOptions::fromCpp(options), JHandlers::fromCpp(handlers));
+  void JHybridNitroSpeechRecognitionSpec::start(const SpeechRecognitionOptions& options, const std::function<void(const SpeechRecognitionResultEvent& /* result */)>& onResult, const std::function<void(const SpeechRecognitionErrorEvent& /* error */)>& onError, const std::function<void(EventType /* eventType */)>& onEvent) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JSpeechRecognitionOptions> /* options */, jni::alias_ref<JFunc_void_SpeechRecognitionResultEvent::javaobject> /* onResult */, jni::alias_ref<JFunc_void_SpeechRecognitionErrorEvent::javaobject> /* onError */, jni::alias_ref<JFunc_void_EventType::javaobject> /* onEvent */)>("start_cxx");
+    method(_javaPart, JSpeechRecognitionOptions::fromCpp(options), JFunc_void_SpeechRecognitionResultEvent_cxx::fromCpp(onResult), JFunc_void_SpeechRecognitionErrorEvent_cxx::fromCpp(onError), JFunc_void_EventType_cxx::fromCpp(onEvent));
   }
   void JHybridNitroSpeechRecognitionSpec::stop() {
     static const auto method = javaClassStatic()->getMethod<void()>("stop");

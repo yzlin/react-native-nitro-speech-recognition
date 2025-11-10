@@ -18,14 +18,14 @@ public extension SpeechRecognitionOptions {
   /**
    * Create a new instance of `SpeechRecognitionOptions`.
    */
-  init(locale: String, interimResults: Bool, maxAlternatives: Double, requiresOnDeviceRecognition: Bool?, addsPunctuation: Bool) {
+  init(locale: String, interimResults: Bool, maxAlternatives: Double, requiresOnDeviceRecognition: Bool?, addsPunctuation: Bool, audioFormat: AudioFormat, sampleRate: Double) {
     self.init(std.string(locale), interimResults, maxAlternatives, { () -> bridge.std__optional_bool_ in
       if let __unwrappedValue = requiresOnDeviceRecognition {
         return bridge.create_std__optional_bool_(__unwrappedValue)
       } else {
         return .init()
       }
-    }(), addsPunctuation)
+    }(), addsPunctuation, audioFormat, sampleRate)
   }
 
   var locale: String {
@@ -93,6 +93,28 @@ public extension SpeechRecognitionOptions {
     @inline(__always)
     set {
       self.__addsPunctuation = newValue
+    }
+  }
+  
+  var audioFormat: AudioFormat {
+    @inline(__always)
+    get {
+      return self.__audioFormat
+    }
+    @inline(__always)
+    set {
+      self.__audioFormat = newValue
+    }
+  }
+  
+  var sampleRate: Double {
+    @inline(__always)
+    get {
+      return self.__sampleRate
+    }
+    @inline(__always)
+    set {
+      self.__sampleRate = newValue
     }
   }
 }

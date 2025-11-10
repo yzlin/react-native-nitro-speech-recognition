@@ -15,9 +15,10 @@
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
-    "expo": "54.0.22",
+    "expo": "54.0.23",
+    "expo-build-properties": "~1.0.9",
     "expo-constants": "~18.0.9",
-    "expo-dev-client": "~6.0.15",
+    "expo-dev-client": "~6.0.17",
     "expo-font": "~14.0.9",
     "expo-haptics": "~15.0.7",
     "expo-image": "~3.0.9",
@@ -31,14 +32,14 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.5",
-    "react-native-audio-api": "^0.9.3",
+    "react-native-audio-api": "^0.10.1",
     "react-native-gesture-handler": "~2.28.0",
-    "react-native-nitro-modules": "^0.31.4",
+    "react-native-nitro-modules": "^0.31.5",
     "react-native-nitro-speech-recognition": "../packages/react-native-nitro-speech-recognition",
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
-    "react-native-worklets": "~0.6.1"
+    "react-native-worklets": "0.5.1"
   },
   "devDependencies": {
     "@types/react": "~19.1.0",
@@ -46,8 +47,6 @@
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0"
   },
-  "overrides": {
-    "react-native-worklets": "~0.6.1"
-  },
-  "private": true
+  "private": true,
+  "packageManager": "bun"
 }

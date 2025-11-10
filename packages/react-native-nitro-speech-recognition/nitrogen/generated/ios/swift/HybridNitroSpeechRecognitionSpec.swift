@@ -15,7 +15,7 @@ public protocol HybridNitroSpeechRecognitionSpec_protocol: HybridObject {
   
 
   // Methods
-  func start(options: SpeechRecognitionOptions, handlers: Handlers) throws -> Void
+  func start(options: SpeechRecognitionOptions, onResult: @escaping (_ result: SpeechRecognitionResultEvent) -> Void, onError: @escaping (_ error: SpeechRecognitionErrorEvent) -> Void, onEvent: @escaping (_ eventType: EventType) -> Void) throws -> Void
   func stop() throws -> Void
   func streamInsert(buffer: ArrayBuffer) throws -> Void
   func isRecognitionAvailable() throws -> Bool

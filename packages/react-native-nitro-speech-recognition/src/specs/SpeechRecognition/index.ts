@@ -11,7 +11,10 @@ import type {
   SupportedLocales,
 } from "./NitroSpeechRecognition.nitro";
 
-export type { SupportedLocales } from "./NitroSpeechRecognition.nitro";
+export type {
+  AudioFormat,
+  SupportedLocales,
+} from "./NitroSpeechRecognition.nitro";
 
 const HybridNitroSpeechRecognition =
   NitroModules.createHybridObject<NitroSpeechRecognitionModule>(
@@ -43,15 +46,10 @@ export class SpeechRecognition {
     maxAlternatives = 5,
     requiresOnDeviceRecognition = false,
     addsPunctuation = false,
+    audioFormat = "pcmFloat32",
+    sampleRate = 16_000,
   }: Partial<SpeechRecognitionOptions>) {
     const emitter = this.eventEmitter;
-    console.log({
-      locale,
-      interimResults,
-      maxAlternatives,
-      requiresOnDeviceRecognition,
-      addsPunctuation,
-    });
     HybridNitroSpeechRecognition.start(
       {
         locale,
@@ -59,17 +57,17 @@ export class SpeechRecognition {
         maxAlternatives,
         requiresOnDeviceRecognition,
         addsPunctuation,
+        audioFormat,
+        sampleRate,
       },
-      {
-        onResult(result) {
-          emitter.emit("result", result);
-        },
-        onError(error) {
-          emitter.emit("error", error);
-        },
-        onEvent(eventType) {
-          emitter.emit(eventType);
-        },
+      (result) => {
+        emitter.emit("result", result);
+      },
+      (error) => {
+        emitter.emit("error", error);
+      },
+      (eventType) => {
+        emitter.emit(eventType);
       }
     );
   }

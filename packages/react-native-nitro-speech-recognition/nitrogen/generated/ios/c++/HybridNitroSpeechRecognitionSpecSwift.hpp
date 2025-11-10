@@ -14,8 +14,8 @@ namespace NitroSpeechRecognition { class HybridNitroSpeechRecognitionSpec_cxx; }
 
 // Forward declaration of `SpeechRecognitionOptions` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { struct SpeechRecognitionOptions; }
-// Forward declaration of `Handlers` to properly resolve imports.
-namespace margelo::nitro::nitrospeechrecognition { struct Handlers; }
+// Forward declaration of `AudioFormat` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { enum class AudioFormat; }
 // Forward declaration of `SpeechRecognitionResultEvent` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { struct SpeechRecognitionResultEvent; }
 // Forward declaration of `SpeechRecognitionResult` to properly resolve imports.
@@ -40,7 +40,7 @@ namespace margelo::nitro::nitrospeechrecognition { enum class PermissionStatus; 
 #include "SpeechRecognitionOptions.hpp"
 #include <string>
 #include <optional>
-#include "Handlers.hpp"
+#include "AudioFormat.hpp"
 #include "SpeechRecognitionResultEvent.hpp"
 #include <functional>
 #include "SpeechRecognitionResult.hpp"
@@ -100,8 +100,8 @@ namespace margelo::nitro::nitrospeechrecognition {
 
   public:
     // Methods
-    inline void start(const SpeechRecognitionOptions& options, const Handlers& handlers) override {
-      auto __result = _swiftPart.start(std::forward<decltype(options)>(options), std::forward<decltype(handlers)>(handlers));
+    inline void start(const SpeechRecognitionOptions& options, const std::function<void(const SpeechRecognitionResultEvent& /* result */)>& onResult, const std::function<void(const SpeechRecognitionErrorEvent& /* error */)>& onError, const std::function<void(EventType /* eventType */)>& onEvent) override {
+      auto __result = _swiftPart.start(std::forward<decltype(options)>(options), onResult, onError, onEvent);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

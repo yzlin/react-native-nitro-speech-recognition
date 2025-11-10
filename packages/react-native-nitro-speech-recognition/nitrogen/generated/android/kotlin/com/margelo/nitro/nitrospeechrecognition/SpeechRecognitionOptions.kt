@@ -31,7 +31,13 @@ data class SpeechRecognitionOptions(
   val requiresOnDeviceRecognition: Boolean?,
   @DoNotStrip
   @Keep
-  val addsPunctuation: Boolean
+  val addsPunctuation: Boolean,
+  @DoNotStrip
+  @Keep
+  val audioFormat: AudioFormat,
+  @DoNotStrip
+  @Keep
+  val sampleRate: Double
 ) {
   /* primary constructor */
 
@@ -43,8 +49,8 @@ data class SpeechRecognitionOptions(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(locale: String, interimResults: Boolean, maxAlternatives: Double, requiresOnDeviceRecognition: Boolean?, addsPunctuation: Boolean): SpeechRecognitionOptions {
-      return SpeechRecognitionOptions(locale, interimResults, maxAlternatives, requiresOnDeviceRecognition, addsPunctuation)
+    private fun fromCpp(locale: String, interimResults: Boolean, maxAlternatives: Double, requiresOnDeviceRecognition: Boolean?, addsPunctuation: Boolean, audioFormat: AudioFormat, sampleRate: Double): SpeechRecognitionOptions {
+      return SpeechRecognitionOptions(locale, interimResults, maxAlternatives, requiresOnDeviceRecognition, addsPunctuation, audioFormat, sampleRate)
     }
   }
 }

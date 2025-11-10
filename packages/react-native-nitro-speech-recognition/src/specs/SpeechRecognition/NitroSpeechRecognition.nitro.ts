@@ -2,7 +2,12 @@ import type { HybridObject } from "react-native-nitro-modules";
 
 export interface NitroSpeechRecognition
   extends HybridObject<{ ios: "swift"; android: "kotlin" }> {
-  start(options: SpeechRecognitionOptions, handlers: Handlers): void;
+  start(
+    options: SpeechRecognitionOptions,
+    onResult: (result: SpeechRecognitionResultEvent) => void,
+    onError: (error: SpeechRecognitionErrorEvent) => void,
+    onEvent: (eventType: EventType) => void
+  ): void;
   stop(): void;
 
   streamInsert(buffer: ArrayBuffer): void;
@@ -26,12 +31,8 @@ export interface SpeechRecognitionOptions {
   maxAlternatives: number;
   requiresOnDeviceRecognition?: boolean;
   addsPunctuation: boolean;
-}
-
-export interface Handlers {
-  onResult: (result: SpeechRecognitionResultEvent) => void;
-  onError: (error: SpeechRecognitionErrorEvent) => void;
-  onEvent: (eventType: EventType) => void;
+  audioFormat: AudioFormat;
+  sampleRate: number;
 }
 
 export interface SpeechRecognitionResultEvent {
@@ -79,3 +80,5 @@ export interface PermissionResponse {
 }
 
 export type PermissionStatus = "undetermined" | "denied" | "granted";
+
+export type AudioFormat = "pcmInt16" | "pcmFloat32";

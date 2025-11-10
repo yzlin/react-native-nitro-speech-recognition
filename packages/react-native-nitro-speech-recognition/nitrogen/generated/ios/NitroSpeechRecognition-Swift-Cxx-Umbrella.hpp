@@ -8,10 +8,10 @@
 #pragma once
 
 // Forward declarations of C++ defined types
+// Forward declaration of `AudioFormat` to properly resolve imports.
+namespace margelo::nitro::nitrospeechrecognition { enum class AudioFormat; }
 // Forward declaration of `EventType` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { enum class EventType; }
-// Forward declaration of `Handlers` to properly resolve imports.
-namespace margelo::nitro::nitrospeechrecognition { struct Handlers; }
 // Forward declaration of `HybridNitroSpeechRecognitionSpec` to properly resolve imports.
 namespace margelo::nitro::nitrospeechrecognition { class HybridNitroSpeechRecognitionSpec; }
 // Forward declaration of `OnDeviceModelDownloadResult` to properly resolve imports.
@@ -34,8 +34,8 @@ namespace margelo::nitro::nitrospeechrecognition { struct SpeechRecognitionResul
 namespace margelo::nitro::nitrospeechrecognition { struct SupportedLocales; }
 
 // Include C++ defined types
+#include "AudioFormat.hpp"
 #include "EventType.hpp"
-#include "Handlers.hpp"
 #include "HybridNitroSpeechRecognitionSpec.hpp"
 #include "OnDeviceModelDownloadResult.hpp"
 #include "OnDeviceModelDownloadStatus.hpp"

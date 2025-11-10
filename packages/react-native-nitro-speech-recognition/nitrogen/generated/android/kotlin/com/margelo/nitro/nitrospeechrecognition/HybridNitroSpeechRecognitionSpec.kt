@@ -47,9 +47,14 @@ abstract class HybridNitroSpeechRecognitionSpec: HybridObject() {
   
 
   // Methods
+  abstract fun start(options: SpeechRecognitionOptions, onResult: (result: SpeechRecognitionResultEvent) -> Unit, onError: (error: SpeechRecognitionErrorEvent) -> Unit, onEvent: (eventType: EventType) -> Unit): Unit
+  
   @DoNotStrip
   @Keep
-  abstract fun start(options: SpeechRecognitionOptions, handlers: Handlers): Unit
+  private fun start_cxx(options: SpeechRecognitionOptions, onResult: Func_void_SpeechRecognitionResultEvent, onError: Func_void_SpeechRecognitionErrorEvent, onEvent: Func_void_EventType): Unit {
+    val __result = start(options, onResult, onError, onEvent)
+    return __result
+  }
   
   @DoNotStrip
   @Keep

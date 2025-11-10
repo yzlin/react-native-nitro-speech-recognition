@@ -54,7 +54,7 @@ namespace margelo::nitro::nitrospeechrecognition {
 
   public:
     // Methods
-    void start(const SpeechRecognitionOptions& options, const Handlers& handlers) override;
+    void start(const SpeechRecognitionOptions& options, const std::function<void(const SpeechRecognitionResultEvent& /* result */)>& onResult, const std::function<void(const SpeechRecognitionErrorEvent& /* error */)>& onError, const std::function<void(EventType /* eventType */)>& onEvent) override;
     void stop() override;
     void streamInsert(const std::shared_ptr<ArrayBuffer>& buffer) override;
     bool isRecognitionAvailable() override;

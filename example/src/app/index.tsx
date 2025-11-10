@@ -1,26 +1,37 @@
 import { observable } from "@legendapp/state";
-import { Memo } from "@legendapp/state/react";
+import { Memo, useValue } from "@legendapp/state/react";
 import { useEffect, useState } from "react";
 import { Alert, Pressable, Text, View } from "react-native";
 import { AudioManager, AudioRecorder } from "react-native-audio-api";
 import {
+  type AudioFormat,
   SpeechRecognition,
   type SupportedLocales,
 } from "react-native-nitro-speech-recognition";
 
+import { convertPcmFloat32To16BitPcm } from "@/lib/utils";
+
 const locale = "en-US";
 
 interface State {
+  sampleRate: number;
+  isRecording: boolean;
   transcript: string;
   interimTranscript: string;
+  audioFormat: AudioFormat;
 }
 
 const state$ = observable<State>({
+  sampleRate: 16_000,
+  isRecording: false,
   transcript: "",
   interimTranscript: "",
+  audioFormat: "pcmFloat32", // default PCM format in react-native-audio-api
 });
 
 export default function Page() {
+  const isRecording = useValue(state$.isRecording);
+
   return (
     <View
       style={{
@@ -41,16 +52,31 @@ export default function Page() {
         style={{
           backgroundColor: "lightblue",
           padding: 16,
+          opacity: isRecording ? 0.5 : 1,
         }}
+        disabled={isRecording}
         onPress={async () => {
           try {
             await checkPermission();
-            await startSpeechRecognition();
+
+            const sampleRate = state$.sampleRate.get();
+            const audioFormat = state$.audioFormat.get();
+
             state$.transcript.set("");
             state$.interimTranscript.set("");
-            startRecording();
+
+            await startSpeechRecognition({
+              sampleRate,
+              audioFormat,
+            });
+            startRecording({
+              sampleRate,
+              audioFormat,
+            });
+            state$.isRecording.set(true);
           } catch (error) {
             console.error(error);
+            state$.isRecording.set(false);
           }
         }}
       >
@@ -60,11 +86,14 @@ export default function Page() {
         style={{
           backgroundColor: "lightblue",
           padding: 16,
+          opacity: isRecording ? 1 : 0.5,
         }}
+        disabled={!isRecording}
         onPress={() => {
           try {
             stopRecording();
             stopSpeechRecognition();
+            state$.isRecording.set(false);
           } catch (error) {
             Alert.alert(error instanceof Error ? error.message : String(error));
           }
@@ -118,32 +147,63 @@ async function checkPermission() {
 
 let recorder: AudioRecorder | null = null;
 
-function startRecording() {
+function cleanup() {
   if (recorder) {
+    recorder.stop();
     recorder.disconnect();
     recorder = null;
   }
+}
+
+function startRecording({
+  sampleRate,
+  audioFormat,
+}: {
+  sampleRate: number;
+  audioFormat: AudioFormat;
+}) {
+  cleanup();
+
+  AudioManager.setAudioSessionOptions({
+    iosCategory: "playAndRecord",
+    iosMode: "spokenAudio",
+    iosOptions: ["defaultToSpeaker", "allowBluetoothA2DP"],
+  });
 
   recorder = new AudioRecorder({
-    sampleRate: 16_000,
+    sampleRate,
     bufferLengthInSamples: 4096,
   });
   recorder.onAudioReady((event) => {
-    const pcm = floatTo16BitPCM(event.buffer.getChannelData(0));
-    speechRecognition.streamInsert(pcm.buffer as ArrayBuffer);
+    const bufferData = event.buffer.getChannelData(0);
+    let chunk: ArrayBufferLike = bufferData.buffer;
+    if (audioFormat === "pcmInt16") {
+      const pcm = convertPcmFloat32To16BitPcm(bufferData);
+      chunk = pcm.buffer;
+    }
+    speechRecognition.streamInsert(chunk as ArrayBuffer);
   });
   recorder.start();
 }
 
 function stopRecording() {
-  recorder?.stop();
-  recorder?.disconnect();
-  recorder = null;
+  cleanup();
+
+  AudioManager.setAudioSessionOptions({
+    iosCategory: "playback",
+    iosMode: "default",
+  });
 }
 
 const speechRecognition = new SpeechRecognition();
 
-async function startSpeechRecognition() {
+async function startSpeechRecognition({
+  sampleRate,
+  audioFormat,
+}: {
+  sampleRate: number;
+  audioFormat: AudioFormat;
+}) {
   if (!SpeechRecognition.isRecognitionAvailable()) {
     throw new Error("Speech recognition is not available");
   }
@@ -178,14 +238,11 @@ async function startSpeechRecognition() {
     state$.interimTranscript.set("");
   };
 
-  const clearInterimTranscript = () => {
-    state$.interimTranscript.set("");
+  const setInterimTranscript = (transcript: string) => {
+    state$.interimTranscript.set(transcript);
   };
 
   speechRecognition.on("result", (event) => {
-    console.log({
-      event,
-    });
     const transcript = event.results[0]?.transcript;
     if (!transcript) {
       return;
@@ -194,7 +251,7 @@ async function startSpeechRecognition() {
     if (event.isFinal) {
       setTranscript(transcript);
     } else {
-      clearInterimTranscript();
+      setInterimTranscript(transcript);
     }
   });
   speechRecognition.on("start", () => {
@@ -219,23 +276,14 @@ async function startSpeechRecognition() {
   speechRecognition.start({
     locale,
     interimResults: true,
-    requiresOnDeviceRecognition: false,
+    requiresOnDeviceRecognition: true,
     addsPunctuation: true,
+    sampleRate,
+    audioFormat,
   });
 }
 
 function stopSpeechRecognition() {
   speechRecognition.stop();
   speechRecognition.unsubscribeAll();
-}
-
-function floatTo16BitPCM(float32Array: Float32Array): DataView {
-  const buffer = new ArrayBuffer(float32Array.length * 2);
-  const view = new DataView(buffer);
-  let offset = 0;
-  for (let i = 0; i < float32Array.length; i++, offset += 2) {
-    const s = Math.max(-1, Math.min(1, float32Array[i]!));
-    view.setInt16(offset, s < 0 ? s * 0x80_00 : s * 0x7f_ff, true);
-  }
-  return view;
 }

@@ -62,6 +62,14 @@
           "options": {
             "strictCase": true,
           },
+          "level": "error",
+          "fix": "safe",
+        },
+        "useConsistentTypeDefinitions": {
+          "level": "error",
+          "options": {
+            "style": "interface",
+          },
         },
       },
       "correctness": {
@@ -69,12 +77,6 @@
         "useExhaustiveDependencies": "off",
       },
       "nursery": {
-        "useConsistentTypeDefinitions": {
-          "level": "error",
-          "options": {
-            "style": "interface",
-          },
-        },
         "noShadow": "info",
       },
       "suspicious": {
@@ -99,7 +101,7 @@
     "clientKind": "git",
     "useIgnoreFile": true,
   },
-  "extends": ["ultracite"],
+  "extends": ["ultracite/core", "ultracite/react"],
   "overrides": [
     {
       "includes": ["**/*.nitro.ts"],
