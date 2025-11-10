@@ -1,10 +1,6 @@
 {
-  "extends": [
-    "@tsconfig/react-native/tsconfig.json"
-  ],
-  "include": [
-    "src"
-  ],
+  "extends": ["@tsconfig/react-native/tsconfig.json"],
+  "include": ["src"],
   "compilerOptions": {
     "composite": true,
     "outDir": "lib",
@@ -14,10 +10,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "module": "esnext",
     "moduleResolution": "Bundler",
     "noEmit": false,

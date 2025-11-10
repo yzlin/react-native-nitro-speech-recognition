@@ -21,8 +21,10 @@ const withNitroSpeechRecognition: ConfigPlugin<{
   speechRecognitionPermission?: string | false;
 }> = (config, { speechRecognitionPermission } = {}) => {
   IOSConfig.Permissions.createPermissionsPlugin({
+    // biome-ignore lint/style/useNamingConvention: iOS plist key naming convention
     NSSpeechRecognitionUsageDescription: SPEECH_RECOGNITION_USAGE,
   })(config, {
+    // biome-ignore lint/style/useNamingConvention: iOS plist key naming convention
     NSSpeechRecognitionUsageDescription: speechRecognitionPermission,
   });
 

@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
+// biome-ignore lint/style/useNamingConvention: expo router specific const
 export const unstable_settings = {
   anchor: "index",
 };

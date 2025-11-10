@@ -16,7 +16,7 @@
     },
     "example": {
       "name": "nitro-speech-recognition-example",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "dependencies": {
         "@expo/vector-icons": "^15.0.2",
         "@legendapp/state": "^3.0.0-beta.41",
@@ -58,7 +58,7 @@
     },
     "packages/react-native-nitro-speech-recognition": {
       "name": "react-native-nitro-speech-recognition",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "dependencies": {
         "eventemitter3": "^5.0.1",
       },

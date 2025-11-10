@@ -1,10 +1,6 @@
 {
-  "extends": [
-    "@tsconfig/react-native/tsconfig.json"
-  ],
-  "include": [
-    "src"
-  ],
+  "extends": ["@tsconfig/react-native/tsconfig.json"],
+  "include": ["src"],
   "exclude": [
     "**/node_modules",
     "**/lib",
@@ -21,10 +17,7 @@
     "allowUnusedLabels": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "module": "esnext",
     "moduleResolution": "Bundler",
     "noEmit": false,

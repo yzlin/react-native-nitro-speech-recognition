@@ -104,7 +104,10 @@
   "extends": ["ultracite/core", "ultracite/react"],
   "overrides": [
     {
-      "includes": ["**/*.nitro.ts"],
+      "includes": [
+        "**/*.nitro.ts",
+        "packages/react-native-nitro-speech-recognition/plugin/**/*.ts",
+      ],
       "linter": {
         "rules": {
           "style": {
