@@ -1,7 +1,8 @@
 import { observable } from "@legendapp/state";
 import { Memo, useValue } from "@legendapp/state/react";
+import { Button } from "heroui-native";
 import { useEffect, useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import { AudioManager, AudioRecorder } from "react-native-audio-api";
 import {
   type AudioFormat,
@@ -33,14 +34,7 @@ export default function Page() {
   const isRecording = useValue(state$.isRecording);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 8,
-      }}
-    >
+    <View className="flex-1 items-center justify-center gap-2">
       <SupportedLocalesSection />
       <Text>Transcript:</Text>
       <Memo>
@@ -48,59 +42,54 @@ export default function Page() {
           <Text>{`${state$.transcript.get()}${state$.interimTranscript.get()}`}</Text>
         )}
       </Memo>
-      <Pressable
-        style={{
-          backgroundColor: "lightblue",
-          padding: 16,
-          opacity: isRecording ? 0.5 : 1,
-        }}
-        disabled={isRecording}
-        onPress={async () => {
-          try {
-            await checkPermission();
+      {isRecording ? (
+        <Button
+          isDisabled={!isRecording}
+          onPress={() => {
+            try {
+              stopRecording();
+              stopSpeechRecognition();
+              state$.isRecording.set(false);
+            } catch (error) {
+              Alert.alert(
+                error instanceof Error ? error.message : String(error)
+              );
+            }
+          }}
+        >
+          Stop Recording
+        </Button>
+      ) : (
+        <Button
+          isDisabled={isRecording}
+          onPress={async () => {
+            try {
+              await checkPermission();
 
-            const sampleRate = state$.sampleRate.get();
-            const audioFormat = state$.audioFormat.get();
+              const sampleRate = state$.sampleRate.get();
+              const audioFormat = state$.audioFormat.get();
 
-            state$.transcript.set("");
-            state$.interimTranscript.set("");
+              state$.transcript.set("");
+              state$.interimTranscript.set("");
 
-            await startSpeechRecognition({
-              sampleRate,
-              audioFormat,
-            });
-            startRecording({
-              sampleRate,
-              audioFormat,
-            });
-            state$.isRecording.set(true);
-          } catch (error) {
-            console.error(error);
-            state$.isRecording.set(false);
-          }
-        }}
-      >
-        <Text>Start Recording</Text>
-      </Pressable>
-      <Pressable
-        style={{
-          backgroundColor: "lightblue",
-          padding: 16,
-          opacity: isRecording ? 1 : 0.5,
-        }}
-        disabled={!isRecording}
-        onPress={() => {
-          try {
-            stopRecording();
-            stopSpeechRecognition();
-            state$.isRecording.set(false);
-          } catch (error) {
-            Alert.alert(error instanceof Error ? error.message : String(error));
-          }
-        }}
-      >
-        <Text>Stop Recording</Text>
-      </Pressable>
+              await startSpeechRecognition({
+                sampleRate,
+                audioFormat,
+              });
+              startRecording({
+                sampleRate,
+                audioFormat,
+              });
+              state$.isRecording.set(true);
+            } catch (error) {
+              console.error(error);
+              state$.isRecording.set(false);
+            }
+          }}
+        >
+          Start Recording
+        </Button>
+      )}
     </View>
   );
 }
@@ -116,7 +105,7 @@ function SupportedLocalesSection() {
   }, []);
 
   return (
-    <View style={{ paddingHorizontal: 16, alignItems: "center" }}>
+    <View className="items-center px-4">
       <Text>Supported Locales:</Text>
       <Text>{locales.locales.join(", ")}</Text>
       <Text>Installed Locales:</Text>
