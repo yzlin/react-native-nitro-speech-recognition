@@ -1,6 +1,5 @@
 {
   "lockfileVersion": 1,
-  "configVersion": 1,
   "workspaces": {
     "": {
       "name": "react-native-nitro-speech-recognition-monorepo",
@@ -16,7 +15,7 @@
     },
     "example": {
       "name": "nitro-speech-recognition-example",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "dependencies": {
         "@expo/vector-icons": "^15.0.2",
         "@gorhom/bottom-sheet": "^5",
@@ -65,7 +64,7 @@
     },
     "packages/react-native-nitro-speech-recognition": {
       "name": "react-native-nitro-speech-recognition",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "dependencies": {
         "eventemitter3": "^5.0.1",
       },
